@@ -3,19 +3,45 @@
   <head>
     <meta charset="utf-8">
     <title>Pixel Art Generator</title>
-    <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <p><input type="file" accept="images/*" name="image" id="file" onchange="loadFile(event)" style="display:none"</p>
-    <p><label for="file">Upload Image</label></p>
-    <p><img id="output"/></p>
-    <p><img id="pixelOutput"</p>
+
+    <input type="file" accept="images/*" name="image" id="file" onchange="loadFile(event)" value="" />
+    <!-- <label for="file">Click to upload image</label> -->
+    <input id="blocks" type="range" min="5" max="35" value="10" />
+    <button onclick="pixelate()">Pixelate</button>
+    <div id="display">
+      <img id="image"/>
+      <canvas id="canvas" height="0" width="0"/>
+    </div>
 
     <script>
       var loadFile = function(event){
-        var image = document.getElementById("output");
+        var image = document.getElementById("image");
         image.src = URL.createObjectURL(event.target.files[0]);
       };
+
+      function pixelate(){
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext('2d');
+        var image = document.getElementById("image");
+        var img = new Image();
+
+        canvas.height = image.height/4;
+        canvas.width = image.width/4;
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        canvas.height = image.height;
+        canvas.width = image.width;
+
+        var size = (blocks.value) * .01;
+        var w = canvas.width * size;
+        var h = canvas.height * size;
+
+        ctx.drawImage(image, 0, 0, w, h);
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(canvas, 0, 0, w, h, 0, 0, canvas.width, canvas.height);
+      }
     </script>
   </body>
 </html>
